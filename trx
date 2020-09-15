@@ -1,0 +1,15 @@
+import 'package:flutter/foundation.dart';
+
+class Transaction {
+  String id;
+  DateTime date;
+  String item;
+  double price;
+
+  Transaction({
+    @required this.date,
+    @required this.id,
+    @required this.item,
+    @required this.price,
+  });
+}
