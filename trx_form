@@ -1,0 +1,92 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+class TrxForm extends StatefulWidget {
+  final Function _addNewTrx;
+  TrxForm(this._addNewTrx);
+
+  @override
+  _TrxFormState createState() => _TrxFormState();
+}
+
+class _TrxFormState extends State<TrxForm> {
+  final itemController = TextEditingController();
+  final priceController = TextEditingController();
+  DateTime selectedDate;
+
+  void datePicked() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    ).then((date) {
+      setState(() {
+        selectedDate = date;
+      });
+    });
+  }
+
+  void submitData() {
+    //print(itemInput);
+    //print(priceInput);
+    print(itemController.text);
+    print(priceController.text);
+    final enteredItem = itemController.text;
+    final enteredPrice = double.parse(priceController.text);
+
+    if (enteredItem.isEmpty || enteredPrice <= 0 || selectedDate == null) {
+      return;
+    }
+    widget._addNewTrx(
+      enteredItem,
+      enteredPrice,
+      selectedDate,
+    );
+
+    Navigator.of(context).pop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          TextField(
+            decoration: InputDecoration(labelText: "Item"),
+            controller: itemController,
+            onSubmitted: (_) => submitData(),
+            //onChanged: (value) => itemInput = value,
+          ),
+          TextField(
+            decoration: InputDecoration(labelText: "Price"),
+            controller: priceController,
+            keyboardType: TextInputType.number,
+            onSubmitted: (_) => submitData(),
+            //onChanged: (value) => priceInput = value,
+          ),
+          Row(
+            children: [
+              Text(selectedDate == null
+                  ? "No Date Chosen"
+                  : "Date Picked: ${DateFormat.MMMMEEEEd().format(selectedDate)}"),
+              FlatButton(
+                  onPressed: datePicked,
+                  child: Text(
+                    "Pick a Date",
+                    style: TextStyle(color: Theme.of(context).primaryColorDark),
+                  ))
+            ],
+          ),
+          RaisedButton(
+            color: Theme.of(context).primaryColorDark,
+            onPressed: submitData,
+            child:
+                Text("Add Transaction", style: TextStyle(color: Colors.white)),
+          )
+        ],
+      ),
+    );
+  }
+}
