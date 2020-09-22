@@ -5,12 +5,13 @@ import "package:intl/intl.dart";
 class TrxList extends StatelessWidget {
   final List<Transaction> transactions;
   final Function _deleteTrx;
-  TrxList(this.transactions, this._deleteTrx);
+  var _height;
+  TrxList(this.transactions, this._deleteTrx, this._height);
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: _height,
       child: transactions.isEmpty
           ? Column(
               children: [
@@ -22,12 +23,11 @@ class TrxList extends StatelessWidget {
                   height: 30,
                 ),
                 Container(
-                  child: Image.asset(
-                    "assets/images/waiting.png",
-                    fit: BoxFit.cover,
-                  ),
-                  height: 250,
-                )
+                    child: Image.asset(
+                      "assets/images/waiting.png",
+                      fit: BoxFit.cover,
+                    ),
+                    height: MediaQuery.of(context).size.height * 0.3)
               ],
             )
           : ListView(
