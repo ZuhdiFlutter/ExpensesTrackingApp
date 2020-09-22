@@ -6,13 +6,41 @@ class TrxForm extends StatefulWidget {
   TrxForm(this._addNewTrx);
 
   @override
-  _TrxFormState createState() => _TrxFormState();
+  _TrxFormState createState() {
+    print("Trx Form");
+    return _TrxFormState();
+  }
 }
 
 class _TrxFormState extends State<TrxForm> {
   final itemController = TextEditingController();
   final priceController = TextEditingController();
   DateTime selectedDate;
+
+  _TrxFormState() {
+    print("Constructor TrxFormState");
+  }
+
+  @override
+  void initState() {
+    // used usually to fetch data from http request etc.
+    print("initState()");
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(TrxForm oldWidget) {
+    // refetch data from database
+    print("updateWidget");
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    // used for cleaning up data
+    print("dispose");
+    super.dispose();
+  }
 
   void datePicked() {
     showDatePicker(
@@ -49,43 +77,50 @@ class _TrxFormState extends State<TrxForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          TextField(
-            decoration: InputDecoration(labelText: "Item"),
-            controller: itemController,
-            onSubmitted: (_) => submitData(),
-            //onChanged: (value) => itemInput = value,
-          ),
-          TextField(
-            decoration: InputDecoration(labelText: "Price"),
-            controller: priceController,
-            keyboardType: TextInputType.number,
-            onSubmitted: (_) => submitData(),
-            //onChanged: (value) => priceInput = value,
-          ),
-          Row(
+    return SingleChildScrollView(
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.only(
+              bottom: MediaQuery.of(context).viewInsets.bottom + 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(selectedDate == null
-                  ? "No Date Chosen"
-                  : "Date Picked: ${DateFormat.MMMMEEEEd().format(selectedDate)}"),
-              FlatButton(
-                  onPressed: datePicked,
-                  child: Text(
-                    "Pick a Date",
-                    style: TextStyle(color: Theme.of(context).primaryColorDark),
-                  ))
+              TextField(
+                decoration: InputDecoration(labelText: "Item"),
+                controller: itemController,
+                onSubmitted: (_) => submitData(),
+                //onChanged: (value) => itemInput = value,
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: "Price"),
+                controller: priceController,
+                keyboardType: TextInputType.number,
+                onSubmitted: (_) => submitData(),
+                //onChanged: (value) => priceInput = value,
+              ),
+              Row(
+                children: [
+                  Text(selectedDate == null
+                      ? "No Date Chosen"
+                      : "Date Picked: ${DateFormat.MMMMEEEEd().format(selectedDate)}"),
+                  FlatButton(
+                      onPressed: datePicked,
+                      child: Text(
+                        "Pick a Date",
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColorDark),
+                      ))
+                ],
+              ),
+              RaisedButton(
+                color: Theme.of(context).primaryColorDark,
+                onPressed: submitData,
+                child: Text("Add Transaction",
+                    style: TextStyle(color: Colors.white)),
+              )
             ],
           ),
-          RaisedButton(
-            color: Theme.of(context).primaryColorDark,
-            onPressed: submitData,
-            child:
-                Text("Add Transaction", style: TextStyle(color: Colors.white)),
-          )
-        ],
+        ),
       ),
     );
   }
